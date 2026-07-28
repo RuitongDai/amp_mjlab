@@ -11,3 +11,10 @@ from .unitree_g1.g1_23dof_constants import (
 from .unitree_g1.g1_23dof_constants import (
   get_g1_23dof_robot_cfg as get_g1_23dof_robot_cfg,
 )
+
+from .f3.f3_constants import (
+  F3_ACTION_SCALE as F3_ACTION_SCALE,
+)
+from .f3.f3_constants import (
+  get_f3_robot_cfg as get_f3_robot_cfg,
+)
