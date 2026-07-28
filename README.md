@@ -80,7 +80,7 @@ Main tasks:
 ## Training
 
 ```bash
-python scripts/train.py Unitree-G1-AMP-Flat --env.scene.num-envs=4096
+python scripts/train.py F3-AMP-Flat --env.scene.num-envs=4096
 ```
 
 Logs are saved by default to:
