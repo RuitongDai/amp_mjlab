@@ -8,12 +8,12 @@ import numpy as np
 import torch
 import tyro
 from tqdm import tqdm
-
+from src.tasks.amp_loco.config.e1.env_cfgs import e1_amp_flat_env_cfg
 import mjlab
 from mjlab.entity import Entity
 from mjlab.scene import Scene
 from mjlab.sim.sim import Simulation, SimulationCfg
-from src.tasks.amp_loco.config.f3.env_cfgs import f3_amp_flat_env_cfg
+
 from mjlab.utils.lab_api.math import (
   axis_angle_from_quat,
   quat_conjugate,
@@ -367,7 +367,7 @@ def main(
   input_file: str | None = None,
   output_name: str | None = None,
   input_dir: str | None = None,
-  output_dir: str = "src/assets/motions/f3/amp/WalkandRun",
+  output_dir: str = "src/assets/motions/e1/amp/WalkandRun",
   input_fps: float = 30.0,
   output_fps: float = 50.0,
   device: str = "cuda:0",
@@ -414,7 +414,7 @@ def main(
   sim_cfg = SimulationCfg()
   sim_cfg.mujoco.timestep = 1.0 / output_fps
 
-  scene = Scene(f3_amp_flat_env_cfg().scene, device=device)
+  scene = Scene(e1_amp_flat_env_cfg().scene, device=device)
   model = scene.compile()
 
   sim = Simulation(num_envs=1, cfg=sim_cfg, model=model, device=device)
@@ -447,35 +447,27 @@ def main(
     renderer.initialize()
 
   joint_names = [
-    "left_hip_roll_joint",
     "left_hip_pitch_joint",
+    "left_hip_roll_joint",
     "left_hip_yaw_joint",
     "left_knee_joint",
     "left_ankle_pitch_joint",
     "left_ankle_roll_joint",
-    "right_hip_roll_joint",
     "right_hip_pitch_joint",
+    "right_hip_roll_joint",
     "right_hip_yaw_joint",
     "right_knee_joint",
     "right_ankle_pitch_joint",
     "right_ankle_roll_joint",
-    "waist_roll_joint",
     "waist_yaw_joint",
-    "waist_pitch_joint",
     "left_shoulder_pitch_joint",
     "left_shoulder_roll_joint",
     "left_shoulder_yaw_joint",
     "left_elbow_joint",
-    "left_wrist_roll_joint",
-    "left_wrist_yaw_joint",
-    "left_wrist_pitch_joint",
     "right_shoulder_pitch_joint",
     "right_shoulder_roll_joint",
     "right_shoulder_yaw_joint",
     "right_elbow_joint",
-    "right_wrist_roll_joint",
-    "right_wrist_yaw_joint",
-    "right_wrist_pitch_joint",
   ]
 
   for i, (cur_input_file, cur_output_name) in enumerate(file_pairs):
