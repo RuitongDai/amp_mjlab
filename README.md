@@ -81,6 +81,7 @@ Main tasks:
 
 ```bash
 python scripts/train.py F3-AMP-Flat --env.scene.num-envs=4096
+python scripts/train.py F3-AMP-Flat --gpu-ids "[1]" --env.scene.num-envs=4096
 ```
 
 Logs are saved by default to:
