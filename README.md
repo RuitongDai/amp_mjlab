@@ -100,8 +100,7 @@ Logs are saved by default to:
 Replay with a trained checkpoint:
 
 ```bash
-python scripts/play.py Unitree-G1-AMP-Rough \
-  --checkpoint-file logs/rsl_rl/g1_amp_locomotion/<run_dir>/model_<iter>.pt
+python scripts/play.py E1-AMP-Flat --checkpoint-file logs/rsl_rl/e1_amp_locomotion/2026-07-28_20-58-36/model_32500.pt
 ```
 
 Note: ONNX export is enabled by default in both training and play workflows.
