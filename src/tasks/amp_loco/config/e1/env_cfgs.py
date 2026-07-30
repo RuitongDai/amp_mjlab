@@ -15,7 +15,6 @@ from mjlab.sensor import ContactMatch, ContactSensorCfg, RayCastSensorCfg
 from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from src.tasks.amp_loco.amp_env_cfg import make_amp_env_cfg
-from tasks.velocity.mdp import commands_vel
 
 
 def e1_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
