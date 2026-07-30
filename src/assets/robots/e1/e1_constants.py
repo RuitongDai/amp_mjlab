@@ -27,7 +27,7 @@ def get_spec() -> mujoco.MjSpec:
 
 E1_ACTUATOR_HIP_PITCH = BuiltinPositionActuatorCfg(
   target_names_expr=(".*_hip_pitch_joint",),
-  stiffness=150.0,
+  stiffness=200.0,
   damping=5.0,
   effort_limit=120.0,
   armature=0.01,
@@ -43,23 +43,31 @@ E1_ACTUATOR_HIP_YAW = BuiltinPositionActuatorCfg(
 
 E1_ACTUATOR_HIP_ROLL = BuiltinPositionActuatorCfg(
   target_names_expr=(".*_hip_roll_joint",),
-  stiffness=100.0,
-  damping=3.0,
+  stiffness=150.0,
+  damping=4.0,
   effort_limit=60.0,
   armature=0.01,
 )
 
 E1_ACTUATOR_KNEES = BuiltinPositionActuatorCfg(
   target_names_expr=(".*_knee_joint",),
-  stiffness=150.0,
+  stiffness=200.0,
   damping=5.0,
   effort_limit=120.0,
   armature=0.01,
 )
 
-E1_ACTUATOR_ANKLES = BuiltinPositionActuatorCfg(
-  target_names_expr=(".*_ankle_pitch_joint", ".*_ankle_roll_joint"),
-  stiffness=30.0,
+E1_ACTUATOR_ANKLES_PITCH = BuiltinPositionActuatorCfg(
+  target_names_expr=(".*_ankle_pitch_joint",),
+  stiffness=80.0,
+  damping=3.0,
+  effort_limit=30.0,
+  armature=0.01,
+)
+
+E1_ACTUATOR_ANKLES_ROLL = BuiltinPositionActuatorCfg(
+  target_names_expr=(".*_ankle_roll_joint",),
+  stiffness=60.0,
   damping=2.0,
   effort_limit=30.0,
   armature=0.01,
@@ -67,8 +75,8 @@ E1_ACTUATOR_ANKLES = BuiltinPositionActuatorCfg(
 
 E1_ACTUATOR_WAIST = BuiltinPositionActuatorCfg(
   target_names_expr=("waist_yaw_joint",),
-  stiffness=100.0,
-  damping=5.0,
+  stiffness=150.0,
+  damping=4.0,
   effort_limit=60.0,
   armature=0.01,
 )
@@ -162,7 +170,8 @@ E1_ARTICULATION = EntityArticulationInfoCfg(
     E1_ACTUATOR_HIP_YAW,
     E1_ACTUATOR_HIP_ROLL,
     E1_ACTUATOR_KNEES,
-    E1_ACTUATOR_ANKLES,
+    E1_ACTUATOR_ANKLES_PITCH,
+    E1_ACTUATOR_ANKLES_ROLL,
     E1_ACTUATOR_WAIST,
     E1_ACTUATOR_SHOULDER_PITCH,
     E1_ACTUATOR_SHOULDER_ROLL,

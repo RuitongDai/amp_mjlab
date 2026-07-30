@@ -340,15 +340,15 @@ def make_amp_env_cfg() -> ManagerBasedRlEnvCfg:
         "asset_cfg": SceneEntityCfg("robot", site_names=()),  # Set per-robot.
       },
     ),
-    # "soft_landing": RewardTermCfg(
-    #   func=mdp.soft_landing,
-    #   weight=-1e-3,
-    #   params={
-    #     "sensor_name": "feet_ground_contact",
-    #     "command_name": "twist",
-    #     "command_threshold": 0.1,
-    #   },
-    # ),
+    "soft_landing": RewardTermCfg(
+      func=mdp.soft_landing,
+      weight=-1e-3,
+      params={
+        "sensor_name": "feet_ground_contact",
+        "command_name": "twist",
+        "command_threshold": 0.1,
+      },
+    ),
     "self_collisions": RewardTermCfg(
       func=mdp.self_collision_cost,
       weight=-0.1,

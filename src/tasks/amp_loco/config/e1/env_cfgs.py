@@ -117,8 +117,8 @@ def e1_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.rewards["foot_slip"].params["asset_cfg"].site_names = site_names
   cfg.rewards.pop("self_collisions", None)
   cfg.rewards["body_ang_vel_xy_l2"].params["body_cfg"].body_names = (root_name,)
-  cfg.rewards["track_anchor_linear_velocity"].params["std"] = 0.4
-  cfg.rewards["track_anchor_angular_velocity"].params["std"] = 0.75
+  cfg.rewards["track_anchor_linear_velocity"].params["std"] = 0.5
+  cfg.rewards["track_anchor_angular_velocity"].params["std"] = 1.0
 
 
   cfg.observations["critic"].terms["body_pos_b"].params["anchor_cfg"].body_names = (anchor_name,)
