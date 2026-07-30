@@ -43,8 +43,8 @@ E1_ACTUATOR_HIP_YAW = BuiltinPositionActuatorCfg(
 
 E1_ACTUATOR_HIP_ROLL = BuiltinPositionActuatorCfg(
   target_names_expr=(".*_hip_roll_joint",),
-  stiffness=150.0,
-  damping=4.0,
+  stiffness=200.0,
+  damping=5.0,
   effort_limit=60.0,
   armature=0.01,
 )
