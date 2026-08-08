@@ -95,11 +95,19 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   assert isinstance(twist_cmd, UniformVelocityCommandCfg)
   twist_cmd.viz.z_offset = 1.15
 
+  twist_cmd.heading_command = False
+  twist_cmd.rel_heading_envs = 0.0
+  twist_cmd.ranges.heading = None
+  # Keep commands close to the motion-data distribution.
+  twist_cmd.ranges.lin_vel_x = (-0.3, 0.8)
+  twist_cmd.ranges.lin_vel_y = (-0.2, 0.2)
+  twist_cmd.ranges.ang_vel_z = (-0.5, 0.5)
+
   cfg.events["foot_friction"].params["asset_cfg"].geom_names = geom_names
   cfg.events["base_com"].params["asset_cfg"].body_names = ("torso_link",)
 
   # Configure motion reset to sample from the entire motion with a delay.
-  cfg.events["init_motion_loader"].params["delay_reset_env_ratio"] = 0.4
+  cfg.events["init_motion_loader"].params["delay_reset_env_ratio"] = 0.0
   cfg.events["init_motion_loader"].params["max_delay_steps"] = 250
 
   # Set motion data path for startup loader and reset.
@@ -122,6 +130,8 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     params={"sensor_name": self_collision_cfg.name, "force_threshold": 10.0},
   )
   cfg.rewards["body_ang_vel_xy_l2"].params["body_cfg"].body_names = (root_name,)
+  cfg.rewards["track_anchor_linear_velocity"].params["std"] = 0.5
+  cfg.rewards["track_anchor_angular_velocity"].params["std"] = 0.6
 
   cfg.observations["critic"].terms["body_pos_b"].params["anchor_cfg"].body_names = (anchor_name,)
   cfg.observations["critic"].terms["body_pos_b"].params["body_cfg"].body_names = body_names
@@ -141,6 +151,20 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.observations["amp"].terms["body_ang_vel_b"].params["anchor_cfg"].body_names = (anchor_name,)
   cfg.observations["amp"].terms["body_ang_vel_b"].params["body_cfg"].body_names = body_names
 
+  cfg.curriculum["command_vel"].params["velocity_stages"] = [
+    {
+      "step": 2000 * 24,
+      "lin_vel_x": (-0.4, 0.9),
+      "lin_vel_y": (-0.35, 0.35),
+      "ang_vel_z": (-0.9, 0.9),
+    },
+    {
+      "step": 5000 * 24,
+      "lin_vel_x": (-0.6, 1.1),
+      "lin_vel_y": (-0.5, 0.5),
+      "ang_vel_z": (-1.2, 1.2),
+    },
+  ]
   
 
   # Apply play mode overrides.

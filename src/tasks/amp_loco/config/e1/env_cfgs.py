@@ -117,7 +117,7 @@ def e1_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.rewards.pop("self_collisions", None)
   cfg.rewards["body_ang_vel_xy_l2"].params["body_cfg"].body_names = (root_name,)
   cfg.rewards["track_anchor_linear_velocity"].params["std"] = 0.5
-  cfg.rewards["track_anchor_angular_velocity"].params["std"] = 1.0
+  cfg.rewards["track_anchor_angular_velocity"].params["std"] = 0.6
 
 
   cfg.observations["critic"].terms["body_pos_b"].params["anchor_cfg"].body_names = (anchor_name,)
@@ -207,7 +207,7 @@ def e1_amp_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     twist_cmd = cfg.commands["twist"]
     assert isinstance(twist_cmd, UniformVelocityCommandCfg)
     twist_cmd.ranges.lin_vel_x = (0,0)
-    twist_cmd.ranges.lin_vel_y = (0.6, 0.6)
+    twist_cmd.ranges.lin_vel_y = (-0, -0)
     twist_cmd.ranges.ang_vel_z = (0,0)
 
   return cfg
