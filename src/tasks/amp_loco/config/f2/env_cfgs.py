@@ -1,10 +1,10 @@
-"""F3 AMP Locomotion environment configurations."""
+"""F2 AMP Locomotion environment configurations."""
 
 import os
 
 from src.assets.robots import (
-  F3_ACTION_SCALE,
-  get_f3_robot_cfg,
+  F2_ACTION_SCALE,
+  get_f2_robot_cfg,
 )
 from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.envs import mdp as envs_mdp
@@ -16,8 +16,9 @@ from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from src.tasks.amp_loco.amp_env_cfg import make_amp_env_cfg
 
-def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
-  """Create F3 rough terrain velocity configuration."""
+
+def f2_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Create F2 rough terrain velocity configuration."""
   cfg = make_amp_env_cfg()
 
   # Keep CCD high enough for stability but avoid Warp OOM from excessive EPA buffers.
@@ -25,9 +26,9 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.sim.contact_sensor_maxmatch = 500
   cfg.sim.nconmax = 48
 
-  cfg.scene.entities = {"robot": get_f3_robot_cfg()}
+  cfg.scene.entities = {"robot": get_f2_robot_cfg()}
 
-  # Set raycast sensor frame to f3 pelvis.
+  # Set raycast sensor frame to f2 pelvis.
   for sensor in cfg.scene.sensors or ():
     if sensor.name == "terrain_scan":
       assert isinstance(sensor, RayCastSensorCfg)
@@ -44,12 +45,7 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
                 "right_hip_roll_link",
                 "right_knee_link",
                 "right_ankle_roll_link",
-                "left_shoulder_roll_link",
-                "left_elbow_link",
-                "left_wrist_yaw_link",
-                "right_shoulder_roll_link",
-                "right_elbow_link",
-                "right_wrist_yaw_link",)
+                )
   anchor_name = "torso_link"
   root_name = "pelvis"
 
@@ -67,19 +63,8 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     track_air_time=True,
   )
 
-  self_collision_cfg = ContactSensorCfg(
-    name="self_collision",
-    primary=ContactMatch(mode="subtree", pattern="pelvis", entity="robot"),
-    secondary=ContactMatch(mode="subtree", pattern="pelvis", entity="robot"),
-    fields=("found", "force"),
-    reduce="none",
-    num_slots=1,
-    history_length=4,
-  )
-
   cfg.scene.sensors = (cfg.scene.sensors or ()) + (
     feet_ground_cfg,
-    self_collision_cfg,
   )
 
   if cfg.scene.terrain is not None and cfg.scene.terrain.terrain_generator is not None:
@@ -87,14 +72,15 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   joint_pos_action = cfg.actions["joint_pos"]
   assert isinstance(joint_pos_action, JointPositionActionCfg)
-  joint_pos_action.scale = F3_ACTION_SCALE
+  joint_pos_action.scale = F2_ACTION_SCALE
 
   cfg.viewer.body_name = "torso_link"
+
 
   twist_cmd = cfg.commands["twist"]
   assert isinstance(twist_cmd, UniformVelocityCommandCfg)
   twist_cmd.viz.z_offset = 1.15
-
+  # Train direct velocity commands consistently.
   twist_cmd.heading_command = False
   twist_cmd.rel_heading_envs = 0.0
   twist_cmd.ranges.heading = None
@@ -102,6 +88,7 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   twist_cmd.ranges.lin_vel_x = (-0.3, 0.8)
   twist_cmd.ranges.lin_vel_y = (-0.2, 0.2)
   twist_cmd.ranges.ang_vel_z = (-0.5, 0.5)
+
 
   cfg.events["foot_friction"].params["asset_cfg"].geom_names = geom_names
   cfg.events["base_com"].params["asset_cfg"].body_names = ("torso_link",)
@@ -112,7 +99,7 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   # Set motion data path for startup loader and reset.
   _motion_base = os.path.join(
-    os.path.dirname(__file__), "..", "..", "..", "..", "assets", "motions", "f3", "amp"
+    os.path.dirname(__file__), "..", "..", "..", "..", "assets", "motions", "f2", "amp"
   )
   _motion_dir = os.path.abspath(os.path.join(_motion_base, "WalkandRun"))
   _recovery_dir = os.path.abspath(os.path.join(_motion_base, "Recovery"))
@@ -124,14 +111,11 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.rewards["track_anchor_linear_velocity"].params["anchor_cfg"].body_names = (anchor_name,)
   cfg.rewards["track_anchor_angular_velocity"].params["anchor_cfg"].body_names = (anchor_name,)
   cfg.rewards["foot_slip"].params["asset_cfg"].site_names = site_names
-  cfg.rewards["self_collisions"] = RewardTermCfg(
-    func=mdp.self_collision_cost,
-    weight=-0.1,
-    params={"sensor_name": self_collision_cfg.name, "force_threshold": 10.0},
-  )
+  cfg.rewards.pop("self_collisions", None)
   cfg.rewards["body_ang_vel_xy_l2"].params["body_cfg"].body_names = (root_name,)
   cfg.rewards["track_anchor_linear_velocity"].params["std"] = 0.5
   cfg.rewards["track_anchor_angular_velocity"].params["std"] = 0.6
+
 
   cfg.observations["critic"].terms["body_pos_b"].params["anchor_cfg"].body_names = (anchor_name,)
   cfg.observations["critic"].terms["body_pos_b"].params["body_cfg"].body_names = body_names
@@ -154,18 +138,17 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.curriculum["command_vel"].params["velocity_stages"] = [
     {
       "step": 2000 * 24,
-      "lin_vel_x": (-0.4, 0.9),
-      "lin_vel_y": (-0.35, 0.35),
-      "ang_vel_z": (-0.9, 0.9),
+      "lin_vel_x": (-0.45, 0.9),
+      "lin_vel_y": (-0.4, 0.4),
+      "ang_vel_z": (-1.1, 1.1),
     },
     {
       "step": 5000 * 24,
-      "lin_vel_x": (-0.6, 1.1),
-      "lin_vel_y": (-0.5, 0.5),
-      "ang_vel_z": (-1.2, 1.2),
+      "lin_vel_x": (-0.6, 1.0),
+      "lin_vel_y": (-0.6, 0.6),
+      "ang_vel_z": (-1.4, 1.4),
     },
   ]
-  
 
   # Apply play mode overrides.
   if play:
@@ -193,9 +176,9 @@ def f3_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   return cfg
 
 
-def f3_amp_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
-  """Create F3 flat terrain velocity configuration."""
-  cfg = f3_amp_rough_env_cfg(play=play)
+def f2_amp_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Create F2 flat terrain velocity configuration."""
+  cfg = f2_amp_rough_env_cfg(play=play)
 
   cfg.sim.njmax = 640
   cfg.sim.mujoco.ccd_iterations = 50
@@ -220,8 +203,8 @@ def f3_amp_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   if play:
     twist_cmd = cfg.commands["twist"]
     assert isinstance(twist_cmd, UniformVelocityCommandCfg)
-    twist_cmd.ranges.lin_vel_x = (1.0, 1.0)
-    twist_cmd.ranges.lin_vel_y = (0, 0)
-    twist_cmd.ranges.ang_vel_z = (0, 0)
+    twist_cmd.ranges.lin_vel_x = (0,0)
+    twist_cmd.ranges.lin_vel_y = (-0, -0)
+    twist_cmd.ranges.ang_vel_z = (0,0)
 
   return cfg

@@ -24,3 +24,9 @@ from .e1.e1_constants import (
 from .e1.e1_constants import (
   get_e1_robot_cfg as get_e1_robot_cfg,
 )
+from .f2.f2_constants import (
+  F2_ACTION_SCALE as F2_ACTION_SCALE,
+)
+from .f2.f2_constants import (
+  get_f2_robot_cfg as get_f2_robot_cfg,
+)
