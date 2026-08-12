@@ -1,0 +1,112 @@
+/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/autograd/graph.py:979: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:408.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+################################################################################
+                     [1m Learning iteration 0/100001 [0m
+
+                       Computation: 25925 steps/s (collection: 1.838s, learning 1.953s)
+             Mean action noise std: 1.00
+          Mean value_function loss: 0.0239
+               Mean surrogate loss: -0.0024
+                 Mean entropy loss: 18.4434
+                     Mean amp loss: 0.7242
+            Mean amp_grad_pen loss: 0.0430
+         Mean amp_policy_pred loss: -0.3521
+         Mean amp_expert_pred loss: 0.0327
+Mean skipped_non_finite_batches loss: 0.0000
+                       Mean reward: 0.31
+               Mean episode length: 14.43
+Episode_Reward/track_anchor_linear_velocity: 0.0059
+Episode_Reward/track_anchor_angular_velocity: 0.0002
+  Episode_Reward/track_root_height: 0.0000
+ Episode_Reward/body_ang_vel_xy_l2: 0.0044
+      Episode_Reward/is_terminated: -0.0022
+       Episode_Reward/joint_acc_l2: -0.0014
+   Episode_Reward/joint_pos_limits: -0.0006
+     Episode_Reward/action_rate_l2: -0.0032
+          Episode_Reward/foot_slip: -0.0007
+       Episode_Reward/soft_landing: -0.0013
+Episode_Reward/gait_feet_force_swing: 0.0004
+Episode_Reward/gait_feet_speed_stance: 0.0003
+Episode_Reward/gait_feet_force_stance: 0.0010
+   Episode_Metrics/mean_action_acc: 1.7906
+  Episode_Metrics/mean_delay_steps: 0.0000
+        Metrics/twist/error_vel_xy: 0.0139
+       Metrics/twist/error_vel_yaw: 0.0598
+      Episode_Termination/time_out: 4.7917
+Episode_Termination/bad_orientation: 0.0000
+Episode_Termination/bad_base_height: 0.0833
+        Metrics/slip_velocity_mean: 0.3360
+        Metrics/landing_force_mean: 184.3211
+--------------------------------------------------------------------------------
+                   Total timesteps: 98304
+                    Iteration time: 3.79s
+                      Time elapsed: 00:00:03
+                               ETA: 09:19:48
+[34m[1mwandb[0m: [33mWARNING[0m Symlinked 1 file into the W&B run directory; call wandb.save again to sync new files.
+/home/dai/github/AMP_mjlab/src/tasks/amp_loco/rl/runner.py:87: UserWarning: # 'dynamic_axes' is not recommended when dynamo=True, and may lead to 'torch._dynamo.exc.UserError: Constraints violated.' Supply the 'dynamic_shapes' argument instead if export is unsuccessful.
+  torch.onnx.export(
+
+[torch.onnx] Obtain model graph for `_OnnxPolicyWrapper([...]` with `torch.export.export(..., strict=False)`...
+[torch.onnx] Obtain model graph for `_OnnxPolicyWrapper([...]` with `torch.export.export(..., strict=False)`... ✅
+[torch.onnx] Run decompositions...
+Traceback (most recent call last):
+  File "/home/dai/github/AMP_mjlab/scripts/train.py", line 222, in <module>
+    main()
+  File "/home/dai/github/AMP_mjlab/scripts/train.py", line 218, in main
+    launch_training(task_id=chosen_task, args=args)
+  File "/home/dai/github/AMP_mjlab/scripts/train.py", line 168, in launch_training
+    run_train(task_id, args, log_dir)
+  File "/home/dai/github/AMP_mjlab/scripts/train.py", line 138, in run_train
+    runner.learn(
+  File "/home/dai/github/AMP_mjlab/rsl_rl/runners/amp_on_policy_runner.py", line 410, in learn
+    self.save(os.path.join(self.log_dir, f"model_{it}.pt"))
+  File "/home/dai/github/AMP_mjlab/src/tasks/amp_loco/rl/runner.py", line 108, in save
+    self._export_policy_to_onnx(policy_path, filename)
+  File "/home/dai/github/AMP_mjlab/src/tasks/amp_loco/rl/runner.py", line 87, in _export_policy_to_onnx
+    torch.onnx.export(
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/onnx/__init__.py", line 291, in export
+    return _compat.export_compat(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/onnx/_internal/exporter/_compat.py", line 161, in export_compat
+    onnx_program = _core.export(
+                   ^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/onnx/_internal/exporter/_flags.py", line 27, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/onnx/_internal/exporter/_core.py", line 1505, in export
+    decomposed_program = _prepare_exported_program_for_export(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/onnx/_internal/exporter/_core.py", line 1050, in _prepare_exported_program_for_export
+    exported_program = _fx_passes.decompose_with_registry(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/onnx/_internal/exporter/_fx_passes.py", line 19, in decompose_with_registry
+    return exported_program.run_decompositions(decomp_table)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/export/exported_program.py", line 124, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/export/exported_program.py", line 1563, in run_decompositions
+    return _decompose_exported_program(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/export/exported_program.py", line 1015, in _decompose_exported_program
+    ) = _decompose_and_get_gm_with_new_signature_constants(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/export/exported_program.py", line 429, in _decompose_and_get_gm_with_new_signature_constants
+    fake_params_buffers = _fakify_params_buffers(fake_mode, mod)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/_export/utils.py", line 1469, in _fakify_params_buffers
+    fake_tensor = fake_mode.from_tensor(value, static_shapes=True)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/_subclasses/fake_tensor.py", line 3334, in from_tensor
+    return self.fake_tensor_converter.from_real_tensor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/_subclasses/fake_tensor.py", line 514, in from_real_tensor
+    out = self.meta_converter(
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/_subclasses/meta_utils.py", line 2291, in __call__
+    r = self.meta_tensor(
+        ^^^^^^^^^^^^^^^^^
+  File "/home/dai/miniconda3/envs/amp_mjlab/lib/python3.11/site-packages/torch/_subclasses/meta_utils.py", line 1051, in meta_tensor
+    source = ConstantSource(
+             ^^^^^^^^^^^^^^^
+KeyboardInterrupt
