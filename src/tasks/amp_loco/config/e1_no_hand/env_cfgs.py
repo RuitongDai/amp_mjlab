@@ -12,7 +12,7 @@ from mjlab.envs.mdp.actions import JointPositionActionCfg
 from mjlab.managers.event_manager import EventTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.sensor import ContactMatch, ContactSensorCfg, RayCastSensorCfg
-from mjlab.tasks.velocity import mdp
+import src.tasks.amp_loco.mdp as mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from src.tasks.amp_loco.amp_env_cfg import make_amp_env_cfg
 from mjlab.managers.observation_manager import ObservationTermCfg
@@ -125,7 +125,7 @@ def e1_no_hand_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   gait_obs_params = {
     "gait_cycle": gait_cycle,
     "phase_offsets": phase_offsets,
-    "air_ratio": air_ratios,
+    "air_ratios": air_ratios,
   }
   cfg.observations["actor"].terms["gait_clock"] = ObservationTermCfg(
     func=mdp.gait_clock_obs,
