@@ -30,3 +30,9 @@ from .f2.f2_constants import (
 from .f2.f2_constants import (
   get_f2_robot_cfg as get_f2_robot_cfg,
 )
+from .e1.e1_no_hand_constants import (
+  E1_NO_HAND_ACTION_SCALE as E1_NO_HAND_ACTION_SCALE,
+)
+from .e1.e1_no_hand_constants import (
+  get_e1_no_hand_robot_cfg as get_e1_no_hand_robot_cfg,
+)

@@ -1,77 +1,83 @@
-"""F2 robot MJCF, scene entity, and motion metadata."""
-
-from __future__ import annotations
+"""E1 constants."""
 
 from pathlib import Path
 
 import mujoco
 
+from src import SRC_PATH
 from mjlab.actuator import BuiltinPositionActuatorCfg
 from mjlab.entity import EntityArticulationInfoCfg, EntityCfg
 from mjlab.utils.spec_config import CollisionCfg
-from src import SRC_PATH
 
 ##
 # MJCF and assets.
 ##
 
-F2_XML: Path = (
-  SRC_PATH / "assets" / "robots" / "f2" / "xmls" / "f1_1_no_hand.xml"
+E1_XML: Path = (
+  SRC_PATH / "assets" / "robots" / "e1" / "xmls" / "E1_no_hand.xml"
 )
-
-assert F2_XML.exists(), f"F2 MJCF not found: {F2_XML}"
-
+assert E1_XML.exists()
 
 def get_spec() -> mujoco.MjSpec:
-  # Empty spec.assets: MuJoCo resolves mesh files from disk (mjlab #873).
-  return mujoco.MjSpec.from_file(str(F2_XML))
+  return mujoco.MjSpec.from_file(str(E1_XML))
 
+##
+# Actuator config.
+##
 
-
-F2_ACTUATOR_LEGS_PITCH = BuiltinPositionActuatorCfg(
+E1_ACTUATOR_HIP_PITCH = BuiltinPositionActuatorCfg(
   target_names_expr=(".*_hip_pitch_joint",),
-  stiffness=100.0,
-  damping=2.0,
-  effort_limit=75.0,
-  armature=0.01,
-)
-F2_ACTUATOR_LEGS = BuiltinPositionActuatorCfg(
-  target_names_expr=(".*_hip_roll_joint",".*_hip_yaw_joint",),
-  stiffness=100.0,
-  damping=2.0,
-  effort_limit=87.0,
-  armature=0.01,
-)
-F2_ACTUATOR_KNEE = BuiltinPositionActuatorCfg(
-  target_names_expr=(".*_knee_joint",),
-  stiffness=150.0,
-  damping=4.0,
+  stiffness=200.0,
+  damping=5.0,
   effort_limit=120.0,
   armature=0.01,
 )
 
-F2_ACTUATOR_ANKLE_PITCH = BuiltinPositionActuatorCfg(
-  target_names_expr=(".*_ankle_pitch_joint",),
-  stiffness=30.0,
-  damping=2.0,
-  effort_limit=89.0,
+E1_ACTUATOR_HIP_YAW = BuiltinPositionActuatorCfg(
+  target_names_expr=(".*_hip_yaw_joint",),
+  stiffness=80.0,
+  damping=3.0,
+  effort_limit=36.0,
   armature=0.01,
 )
 
-F2_ACTUATOR_ANKLE_ROLL = BuiltinPositionActuatorCfg(
-  target_names_expr=(".*_ankle_roll_joint",),
-  stiffness=30.0,
-  damping=2.0,
-  effort_limit=12.0,
-  armature=0.01,
-)
-
-
-F2_ACTUATOR_WAIST = BuiltinPositionActuatorCfg(
-  target_names_expr=("waist_yaw_joint", "waist_roll_joint"),
+E1_ACTUATOR_HIP_ROLL = BuiltinPositionActuatorCfg(
+  target_names_expr=(".*_hip_roll_joint",),
   stiffness=200.0,
   damping=5.0,
-  effort_limit=87.0,
+  effort_limit=60.0,
+  armature=0.01,
+)
+
+E1_ACTUATOR_KNEES = BuiltinPositionActuatorCfg(
+  target_names_expr=(".*_knee_joint",),
+  stiffness=200.0,
+  damping=5.0,
+  effort_limit=120.0,
+  armature=0.01,
+)
+
+E1_ACTUATOR_ANKLES_PITCH = BuiltinPositionActuatorCfg(
+  target_names_expr=(".*_ankle_pitch_joint",),
+  stiffness=80.0,
+  damping=3.0,
+  effort_limit=36.0,
+  armature=0.01,
+)
+
+E1_ACTUATOR_ANKLES_ROLL = BuiltinPositionActuatorCfg(
+  target_names_expr=(".*_ankle_roll_joint",),
+  stiffness=60.0,
+  damping=2.0,
+  effort_limit=30.0,
+  armature=0.01,
+)
+
+E1_ACTUATOR_WAIST = BuiltinPositionActuatorCfg(
+  target_names_expr=("waist_yaw_joint",),
+  stiffness=150.0,
+  damping=4.0,
+  effort_limit=60.0,
   armature=0.01,
 )
 
@@ -80,19 +86,11 @@ F2_ACTUATOR_WAIST = BuiltinPositionActuatorCfg(
 ##
 
 HOME_KEYFRAME = EntityCfg.InitialStateCfg(
-  pos=(0, 0, 0.86),
+  pos=(0, 0, 0.67),
   joint_pos={
-    # Legs.
-    ".*_hip_pitch_joint": -0.1,
-    ".*_hip_roll_joint": 0.0,
-    ".*_hip_yaw_joint": 0.0,
-    ".*_knee_joint": 0.2,
-    ".*_ankle_pitch_joint": -0.1,
-    ".*_ankle_roll_joint": 0.0,
-
-    # Waist controlling torso_link.
-    "waist_yaw_joint": 0.0,
-    "waist_roll_joint": 0.0,
+    ".*_hip_pitch_joint": -0.10,
+    ".*_knee_joint": 0.23,
+    ".*_ankle_pitch_joint": -0.13,
   },
   joint_vel={".*": 0.0},
 )
@@ -127,47 +125,52 @@ FEET_ONLY_COLLISION = CollisionCfg(
 )
 
 ##
-# Entity config.
+# Final config.
 ##
 
-F2_ARTICULATION = EntityArticulationInfoCfg(
+E1_ARTICULATION = EntityArticulationInfoCfg(
   actuators=(
-    F2_ACTUATOR_LEGS_PITCH,
-    F2_ACTUATOR_LEGS,
-    F2_ACTUATOR_KNEE,
-    F2_ACTUATOR_ANKLE_PITCH,
-    F2_ACTUATOR_ANKLE_ROLL,
-    F2_ACTUATOR_WAIST,
+    E1_ACTUATOR_HIP_PITCH,
+    E1_ACTUATOR_HIP_YAW,
+    E1_ACTUATOR_HIP_ROLL,
+    E1_ACTUATOR_KNEES,
+    E1_ACTUATOR_ANKLES_PITCH,
+    E1_ACTUATOR_ANKLES_ROLL,
+    E1_ACTUATOR_WAIST,
   ),
   soft_joint_pos_limit_factor=0.9,
 )
 
+def get_e1_no_hand_robot_cfg() -> EntityCfg:
+  """Get a fresh e1 robot configuration instance.
 
-def get_f2_robot_cfg() -> EntityCfg:
-  """Get a fresh F2 robot configuration instance."""
-
+  Returns a new EntityCfg instance each time to avoid mutation issues when
+  the config is shared across multiple places.
+  """
   return EntityCfg(
     init_state=HOME_KEYFRAME,
     collisions=(FULL_COLLISION,),
     spec_fn=get_spec,
-    articulation=F2_ARTICULATION,
+    articulation=E1_ARTICULATION,
   )
 
 
-F2_ACTION_SCALE: dict[str, float] = {}
-for a in F2_ARTICULATION.actuators:
+E1_NO_HAND_ACTION_SCALE: dict[str, float] = {}
+for a in E1_ARTICULATION.actuators:
   assert isinstance(a, BuiltinPositionActuatorCfg)
   e = a.effort_limit
   s = a.stiffness
   names = a.target_names_expr
   assert e is not None
   for n in names:
-    F2_ACTION_SCALE[n] = 0.25 * e / s
+    E1_NO_HAND_ACTION_SCALE[n] = 0.25 * e / s
+
 
 if __name__ == "__main__":
   import mujoco.viewer as viewer
 
   from mjlab.entity.entity import Entity
 
-  robot = Entity(get_f2_robot_cfg())
+  robot = Entity(get_e1_no_hand_robot_cfg())
+
   viewer.launch(robot.spec.compile())
