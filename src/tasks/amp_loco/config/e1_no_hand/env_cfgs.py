@@ -118,64 +118,64 @@ def e1_no_hand_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.rewards["track_anchor_linear_velocity"].params["std"] = 0.5
   cfg.rewards["track_anchor_angular_velocity"].params["std"] = 0.6
 
-  # # gait周期步态
-  # gait_cycle = 1.2
-  # phase_offsets = (0.38, 0.88)
-  # air_ratios = (0.38, 0.38)
-  # gait_obs_params = {
-  #   "gait_cycle": gait_cycle,
-  #   "phase_offsets": phase_offsets,
-  #   "air_ratio": air_ratios,
-  # }
-  # cfg.observations["actor"].terms["gait_clock"] = ObservationTermCfg(
-  #   func=mdp.gait_clock_obs,
-  #   params=gait_obs_params,
-  # )
-  # cfg.observations["critic"].terms["gait_clock"] = ObservationTermCfg(
-  #   func=mdp.gait_clock_obs,
-  #   params=gait_obs_params,
-  # )
-  # gait_common_params = {
-  #   "gait_cycle": gait_cycle,
-  #   "phase_offsets": phase_offsets,
-  #   "air_ratios": air_ratios,
-  #   "transition": 0.02,
-  #   "command_name": "twist",
-  #   "command_threshold": 0.1,
-  # }
-  #
-  # cfg.rewards["gait_feet_force_swing"] = RewardTermCfg(
-  #   func=mdp.gait_feet_force_swing,
-  #   weight=0.15,
-  #   params={
-  #     **gait_common_params,
-  #     "sensor_name": "feet_ground_contact",
-  #     "force_std": 20.0,
-  #   },
-  # )
-  #
-  # cfg.rewards["gait_feet_speed_stance"] = RewardTermCfg(
-  #   func=mdp.gait_feet_speed_stance,
-  #   weight=0.15,
-  #   params={
-  #     **gait_common_params,
-  #     "asset_cfg": SceneEntityCfg(
-  #       "robot",
-  #       site_names=site_names,
-  #     ),
-  #     "speed_std": 0.15,
-  #   },
-  # )
-  #
-  # cfg.rewards["gait_feet_force_stance"] = RewardTermCfg(
-  #   func=mdp.gait_feet_force_stance,
-  #   weight=0.10,
-  #   params={
-  #     **gait_common_params,
-  #     "sensor_name": "feet_ground_contact",
-  #     "force_std": 50.0,
-  #   },
-  # )
+  # gait周期步态
+  gait_cycle = 1.2
+  phase_offsets = (0.38, 0.88)
+  air_ratios = (0.38, 0.38)
+  gait_obs_params = {
+    "gait_cycle": gait_cycle,
+    "phase_offsets": phase_offsets,
+    "air_ratio": air_ratios,
+  }
+  cfg.observations["actor"].terms["gait_clock"] = ObservationTermCfg(
+    func=mdp.gait_clock_obs,
+    params=gait_obs_params,
+  )
+  cfg.observations["critic"].terms["gait_clock"] = ObservationTermCfg(
+    func=mdp.gait_clock_obs,
+    params=gait_obs_params,
+  )
+  gait_common_params = {
+    "gait_cycle": gait_cycle,
+    "phase_offsets": phase_offsets,
+    "air_ratios": air_ratios,
+    "transition": 0.02,
+    "command_name": "twist",
+    "command_threshold": 0.1,
+  }
+
+  cfg.rewards["gait_feet_force_swing"] = RewardTermCfg(
+    func=mdp.gait_feet_force_swing,
+    weight=0.15,
+    params={
+      **gait_common_params,
+      "sensor_name": "feet_ground_contact",
+      "force_std": 20.0,
+    },
+  )
+
+  cfg.rewards["gait_feet_speed_stance"] = RewardTermCfg(
+    func=mdp.gait_feet_speed_stance,
+    weight=0.15,
+    params={
+      **gait_common_params,
+      "asset_cfg": SceneEntityCfg(
+        "robot",
+        site_names=site_names,
+      ),
+      "speed_std": 0.15,
+    },
+  )
+
+  cfg.rewards["gait_feet_force_stance"] = RewardTermCfg(
+    func=mdp.gait_feet_force_stance,
+    weight=0.10,
+    params={
+      **gait_common_params,
+      "sensor_name": "feet_ground_contact",
+      "force_std": 50.0,
+    },
+  )
 
   cfg.observations["critic"].terms["body_pos_b"].params["anchor_cfg"].body_names = (anchor_name,)
   cfg.observations["critic"].terms["body_pos_b"].params["body_cfg"].body_names = body_names
