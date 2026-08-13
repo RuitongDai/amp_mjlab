@@ -70,10 +70,12 @@ def e1_no_hand_amp_ppo_runner_cfg() -> RslRlAmpRunnerCfg:
     num_steps_per_env=24,
     max_iterations=100001,
     # AMP parameters
-    amp_reward_coef=0.1,
+    # amp_reward_coef=0.1,
+    amp_reward_coef=0.05,
     amp_motion_files=os.path.normpath(_MOTION_DATA_DIR),
     amp_num_preload_transitions=200000,
-    amp_task_reward_lerp=0.75,
+    # amp_task_reward_lerp=0.75,
+    amp_task_reward_lerp=0.9,
     amp_discr_hidden_dims=[1024, 512, 256],
     min_normalized_std=[0.05] * 13,
     amp_body_names=(
