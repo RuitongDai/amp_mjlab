@@ -126,20 +126,22 @@ def e1_no_hand_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     "gait_cycle": gait_cycle,
     "phase_offsets": phase_offsets,
     "air_ratios": air_ratios,
+    "command_name": "twist",
+    "command_threshold": 0.1,
   }
   cfg.observations["actor"].terms["gait_clock"] = ObservationTermCfg(
-    func=mdp.gait_clock_obs,
+    func=mdp.gait_clock_obs_masked,
     params=gait_obs_params,
   )
   cfg.observations["critic"].terms["gait_clock"] = ObservationTermCfg(
-    func=mdp.gait_clock_obs,
+    func=mdp.gait_clock_obs_masked,
     params=gait_obs_params,
   )
   gait_common_params = {
     "gait_cycle": gait_cycle,
     "phase_offsets": phase_offsets,
     "air_ratios": air_ratios,
-    "transition": 0.02,
+    "transition": 0.05,
     "command_name": "twist",
     "command_threshold": 0.1,
   }
@@ -263,8 +265,8 @@ def e1_no_hand_amp_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   if play:
     twist_cmd = cfg.commands["twist"]
     assert isinstance(twist_cmd, UniformVelocityCommandCfg)
-    twist_cmd.ranges.lin_vel_x = (0,0)
-    twist_cmd.ranges.lin_vel_y = (0.5, 0.5)
-    twist_cmd.ranges.ang_vel_z = (0,0)
+    twist_cmd.ranges.lin_vel_x = (-0,-0)
+    twist_cmd.ranges.lin_vel_y = (-0, -0)
+    twist_cmd.ranges.ang_vel_z = (0.,0.)
 
   return cfg

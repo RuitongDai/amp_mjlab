@@ -53,6 +53,42 @@ def gait_clock_obs(
     dim=-1,
   )
 
+def gait_clock_obs_masked(
+  env: ManagerBasedRlEnv,
+  gait_cycle: float,
+  phase_offsets: tuple[float, float],
+  air_ratios: tuple[float, float],
+  command_name: str = "twist",
+  command_threshold: float = 0.1,
+) -> torch.Tensor:
+  """Clock observation; fixed when standing."""
+  phase = gait_phase(env, gait_cycle, phase_offsets)
+
+  moving = _moving_mask(env, command_name, command_threshold).unsqueeze(-1)
+
+  ratio = torch.tensor(
+    air_ratios,
+    device=env.device,
+    dtype=torch.float32,
+  ).expand(env.num_envs, -1)
+
+  clock = torch.cat(
+    (
+      torch.sin(2.0 * torch.pi * phase),
+      torch.cos(2.0 * torch.pi * phase),
+      ratio,
+    ),
+    dim=-1,
+  )
+
+  standing_clock = torch.tensor(
+    [0.0, 0.0, 1.0, 1.0, 0.0, 0.0],
+    device=env.device,
+    dtype=torch.float32,
+  ).expand(env.num_envs, -1)
+
+  return moving * clock + (1.0 - moving) * standing_clock
+
 
 def _gait_masks(
   phase: torch.Tensor,
