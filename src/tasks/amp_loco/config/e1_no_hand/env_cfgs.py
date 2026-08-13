@@ -148,7 +148,7 @@ def e1_no_hand_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   cfg.rewards["gait_feet_force_swing"] = RewardTermCfg(
     func=mdp.gait_feet_force_swing,
-    weight=0.15,
+    weight=0.3,
     params={
       **gait_common_params,
       "sensor_name": "feet_ground_contact",
@@ -158,7 +158,7 @@ def e1_no_hand_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   cfg.rewards["gait_feet_speed_stance"] = RewardTermCfg(
     func=mdp.gait_feet_speed_stance,
-    weight=0.15,
+    weight=0.3,
     params={
       **gait_common_params,
       "asset_cfg": SceneEntityCfg(
@@ -171,7 +171,7 @@ def e1_no_hand_amp_rough_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
 
   cfg.rewards["gait_feet_force_stance"] = RewardTermCfg(
     func=mdp.gait_feet_force_stance,
-    weight=0.10,
+    weight=0.2,
     params={
       **gait_common_params,
       "sensor_name": "feet_ground_contact",
