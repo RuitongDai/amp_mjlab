@@ -82,6 +82,12 @@ Main tasks:
 ```bash
 python scripts/train.py F3-AMP-Flat --env.scene.num-envs=4096
 python scripts/train.py F3-AMP-Flat --gpu-ids "[1]" --env.scene.num-envs=4096
+python scripts/train.py E1-NO-HAND-AMP-Flat \
+  --agent.resume True \
+  --agent.load-run gait \
+  --agent.load-checkpoint model_14000.pt \
+  --agent.run-name gait_amp005_resume \
+  --env.scene.num-envs 4096
 ```
 
 Logs are saved by default to:
